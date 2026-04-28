@@ -34,7 +34,7 @@ Certifique-se de ter instalado:
 ### 1. Instale as dependências do Angular
 
 ```bash
-cd meu-projeto-angular
+cd sistema-pizzaria
 npm install
 ```
 
@@ -75,9 +75,13 @@ http://localhost:4200
 | Padrão | Onde foi aplicado |
 |---|---|
 | **Factory** | `ProdutoFactory` — criação de `ItemPedido` |
+
 | **Singleton** | `PedidoService`, `PedidoRepositoryService` via `providedIn: 'root'` |
+
 | **Strategy** | `DescontoStrategy` — `SemDesconto`, `DescontoPercentual`, `DescontoFixo` |
+
 | **Observer** | Angular Signals no `PedidoService` — UI reage automaticamente |
+
 | **Repository** | `PedidoRepositoryService` — isola o acesso aos dados |
 
 ---
