@@ -1,9 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PedidoComponent } from './views/pedido/pedido';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [PedidoComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

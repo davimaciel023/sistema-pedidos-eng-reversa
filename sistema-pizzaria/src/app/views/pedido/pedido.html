@@ -1,1 +1,154 @@
-<p>pedido works!</p>
+<div class="min-h-screen bg-[#0a0a0f] text-[#e8e8f0]">
+
+  <!-- HEADER -->
+  <header class="bg-[#10101c]/95 border-b border-white/[0.07] backdrop-blur-sm sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-6 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center text-base">
+          🍕
+        </div>
+        <span class="text-[15px] font-bold text-white tracking-tight">Sistema de Pedidos</span>
+      </div>
+      <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[11px] px-3 py-1.5 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        {{ service.itens().length }} itens no carrinho
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN GRID -->
+  <div class="max-w-6xl mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-5">
+
+    <!-- COLUNA ESQUERDA -->
+    <div class="flex flex-col gap-5">
+
+      <!-- CARDÁPIO -->
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[1.2px] text-[#6b6b8a] mb-3">Cardápio</p>
+        <div class="bg-[#12121e] border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div class="px-[18px] py-3.5 border-b border-white/[0.05] flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-orange-500/15 flex items-center justify-center text-[13px]">🧾</div>
+            <span class="text-[13px] font-semibold text-[#c8c8e0]">Itens disponíveis</span>
+          </div>
+          <div *ngFor="let p of produtos()"
+            class="flex items-center justify-between px-[18px] py-3.5 border-b border-white/[0.04] last:border-b-0 hover:bg-white/[0.02] transition-colors">
+            <div>
+              <p class="text-[13px] font-medium text-[#d8d8f0]">{{ p.nome }}</p>
+              <span class="text-[11px] font-semibold text-orange-400 mt-0.5 block">R$ {{ p.preco.toFixed(2) }}</span>
+            </div>
+            <button (click)="ctrl.adicionar(p)"
+              class="w-8 h-8 rounded-lg bg-orange-500/15 border border-orange-500/30 text-orange-400 text-lg flex items-center justify-center hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all active:scale-90 leading-none">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESCONTO -->
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[1.2px] text-[#6b6b8a] mb-3">Desconto</p>
+        <div class="bg-[#12121e] border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div class="px-[18px] py-3.5 border-b border-white/[0.05] flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-violet-500/15 flex items-center justify-center text-[13px]">🏷️</div>
+            <span class="text-[13px] font-semibold text-[#c8c8e0]">Aplicar desconto percentual</span>
+          </div>
+          <div class="flex gap-2 px-[18px] py-3.5">
+            <input type="number" [(ngModel)]="desconto" min="0" max="100" placeholder="Ex: 10"
+              class="flex-1 bg-[#0d0d18] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13px] text-[#c8c8e0] placeholder-[#3a3a55] outline-none focus:border-orange-500/40 transition-colors" />
+            <button (click)="aplicarDesconto()"
+              class="bg-violet-500/15 border border-violet-500/30 text-violet-400 px-4 py-2.5 rounded-xl text-[12px] font-semibold hover:bg-violet-500/25 transition-colors whitespace-nowrap">
+              Aplicar %
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTATOS -->
+      <div>
+        <p class="text-[11px] font-semibold uppercase tracking-[1.2px] text-[#6b6b8a] mb-3">Contatos</p>
+        <div class="bg-[#12121e] border border-white/[0.07] rounded-2xl overflow-hidden">
+          <div class="px-[18px] py-3.5 border-b border-white/[0.05] flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-blue-500/12 flex items-center justify-center text-[13px]">📱</div>
+            <span class="text-[13px] font-semibold text-[#c8c8e0]">Envio via WhatsApp</span>
+          </div>
+          <div class="px-[18px] py-4 flex flex-col gap-3">
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#55556a] mb-1.5">Telefone do cliente</p>
+              <input [(ngModel)]="telCliente" placeholder="5585999999999"
+                class="w-full bg-[#0d0d18] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13px] text-[#c8c8e0] placeholder-[#3a3a55] outline-none focus:border-orange-500/40 transition-colors" />
+            </div>
+            <div>
+              <p class="text-[10px] font-semibold uppercase tracking-[1px] text-[#55556a] mb-1.5">Telefone do estabelecimento</p>
+              <input [(ngModel)]="telEstab" placeholder="5585999999999"
+                class="w-full bg-[#0d0d18] border border-white/[0.08] rounded-xl px-3.5 py-2.5 text-[13px] text-[#c8c8e0] placeholder-[#3a3a55] outline-none focus:border-orange-500/40 transition-colors" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUNA DIREITA — CARRINHO -->
+    <div>
+      <p class="text-[11px] font-semibold uppercase tracking-[1.2px] text-[#6b6b8a] mb-3">Pedido atual</p>
+      <div class="bg-[#12121e] border border-white/[0.07] rounded-2xl overflow-hidden sticky top-24">
+
+        <div class="px-[18px] py-3.5 border-b border-white/[0.05] flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500/12 flex items-center justify-center text-[13px]">🛒</div>
+          <span class="text-[13px] font-semibold text-[#c8c8e0]">Resumo do carrinho</span>
+        </div>
+
+        <!-- VAZIO -->
+        <div *ngIf="service.itens().length === 0" class="px-[18px] py-10 text-center">
+          <p class="text-3xl mb-2">🛍️</p>
+          <p class="text-[12px] text-[#3a3a55]">Nenhum item adicionado ainda.</p>
+          <p class="text-[11px] text-[#2a2a45] mt-1">Selecione itens do cardápio</p>
+        </div>
+
+        <!-- ITENS -->
+        <div *ngIf="service.itens().length > 0">
+          <div *ngFor="let item of service.itens()"
+            class="flex items-center justify-between px-[18px] py-3 border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
+            <div>
+              <p class="text-[13px] font-medium text-[#c8c8e0]">{{ item.produto.nome }}</p>
+              <p class="text-[11px] text-[#55556a] mt-0.5">x{{ item.quantidade }} × R$ {{ item.produto.preco.toFixed(2) }}</p>
+            </div>
+            <div class="flex items-center gap-2.5">
+              <span class="text-[13px] font-bold text-emerald-400">R$ {{ item.subtotal.toFixed(2) }}</span>
+              <button (click)="ctrl.remover(item.produto.id)"
+                class="w-6 h-6 rounded-md bg-red-500/10 border-0 text-red-400 text-[11px] flex items-center justify-center hover:bg-red-500/20 transition-colors cursor-pointer">
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <!-- TOTAIS -->
+          <div class="px-[18px] py-4 border-t border-white/[0.05] space-y-1.5">
+            <div class="flex justify-between text-[12px] text-[#6b6b8a]">
+              <span>Subtotal</span>
+              <span>R$ {{ service.subtotal.toFixed(2) }}</span>
+            </div>
+            <div *ngIf="service.desconto > 0" class="flex justify-between text-[12px] text-red-400">
+              <span>Desconto</span>
+              <span>- R$ {{ service.desconto.toFixed(2) }}</span>
+            </div>
+            <div class="flex justify-between text-[15px] font-bold text-white border-t border-white/[0.06] pt-3 mt-2">
+              <span>Total</span>
+              <span class="text-emerald-400">R$ {{ service.total().toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <!-- BOTÃO -->
+          <div class="px-[18px] pb-[18px]">
+            <button (click)="finalizar()"
+              class="w-full py-3.5 rounded-xl bg-gradient-to-r from-green-700 to-emerald-600 hover:from-green-600 hover:to-emerald-500 text-white text-[13px] font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-lg shadow-emerald-900/30">
+              💬 Finalizar e enviar WhatsApp
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
