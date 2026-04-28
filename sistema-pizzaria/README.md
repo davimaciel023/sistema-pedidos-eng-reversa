@@ -1,59 +1,95 @@
-# SistemaPizzaria
+# 🍕 Sistema de Pedidos — Arquitetura em Camadas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
+## 🧱 Tecnologias utilizadas
 
-## Development server
+- **Angular 17+** — Framework frontend
+- **Tailwind CSS** — Estilização
+- **JSON Server** — Simulação de backend (API Fake)
+- **TypeScript** — Tipagem estática
 
-To start a local development server, run:
+---
+
+## 📁 Estrutura do projeto
+src/app/
+models/          → Interfaces: Produto, ItemPedido, Pedido
+services/        → PedidoService, ProdutoFactory, DescontoStrategy
+repositories/    → PedidoRepositoryService (acesso ao JSON Server)
+controllers/     → PedidoControllerService (ponte UI ↔ lógica)
+views/           → PedidoComponent (interface do usuário)
+
+---
+
+## ⚙️ Pré-requisitos
+
+Certifique-se de ter instalado:
+
+- [Node.js](https://nodejs.org/) v18+
+- [Angular CLI](https://angular.io/cli)
+- [JSON Server](https://github.com/typicode/json-server)
+
+---
+
+## 🚀 Como rodar o projeto
+
+### 1. Instale as dependências do Angular
+
+```bash
+cd meu-projeto-angular
+npm install
+```
+
+### 2. Instale o JSON Server globalmente
+
+```bash
+npm install -g json-server
+```
+
+### 3. Inicie o JSON Server
+
+Abra um terminal na pasta onde está o `db.json` e rode:
+
+```bash
+json-server --watch db.json --port 3000
+```
+
+Você verá:
+Resources
+http://localhost:3000/pedidos
+http://localhost:3000/produtos
+
+### 4. Inicie o Angular
+
+Abra outro terminal na pasta do projeto Angular e rode:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### 5. Acesse no navegador
+http://localhost:4200
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🎯 Padrões de projeto aplicados
 
-```bash
-ng generate component component-name
-```
+| Padrão | Onde foi aplicado |
+|---|---|
+| **Factory** | `ProdutoFactory` — criação de `ItemPedido` |
+| **Singleton** | `PedidoService`, `PedidoRepositoryService` via `providedIn: 'root'` |
+| **Strategy** | `DescontoStrategy` — `SemDesconto`, `DescontoPercentual`, `DescontoFixo` |
+| **Observer** | Angular Signals no `PedidoService` — UI reage automaticamente |
+| **Repository** | `PedidoRepositoryService` — isola o acesso aos dados |
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 📱 Integração com WhatsApp
 
-## Building
+Ao finalizar o pedido, o sistema abre automaticamente o WhatsApp com o resumo do pedido enviado para:
 
-To build the project run:
+- ✅ Telefone do **cliente**
+- ✅ Telefone do **estabelecimento**
 
-```bash
-ng build
-```
+Os telefones devem ser informados no formato internacional:
+5585999999999
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
