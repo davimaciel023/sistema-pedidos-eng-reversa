@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PedidoService } from '../services/pedido';
 import { Produto } from '../models/produto.model';
-import { DescontoPercentual, DescontoFixo, SemDesconto } from '../services/desconto.strategy';
+import { Pedido } from '../models/pedido.model';
 
 @Injectable({ providedIn: 'root' })
 export class PedidoControllerService {
@@ -17,20 +17,27 @@ export class PedidoControllerService {
   }
 
   aplicarDescontoPercentual(percentual: number): void {
-    this.service.setStrategy(
-      percentual > 0 ? new DescontoPercentual(percentual) : new SemDesconto()
-    );
+    this.service.aplicarDescontoPercentual(percentual);
   }
 
   aplicarDescontoFixo(valor: number): void {
-    this.service.setStrategy(
-      valor > 0 ? new DescontoFixo(valor) : new SemDesconto()
-    );
+    this.service.aplicarDescontoFixo(valor);
   }
 
   finalizar(telCliente: string, telEstab: string): void {
     const pedido = this.service.finalizarPedido(telCliente, telEstab);
-    this.service.enviarWhatsApp(pedido);
+    this.enviarWhatsApp(pedido);
     this.service.limparPedido();
+  }
+
+  private enviarWhatsApp(pedido: Pedido): void {
+    const resumo = this.service.gerarMensagemWhatsApp(pedido);
+    const msgCliente = encodeURIComponent(`Seu pedido foi recebido!\n${resumo}`);
+    const msgEstab = encodeURIComponent(`Novo pedido recebido!\n${resumo}`);
+
+    window.open(`https://wa.me/${pedido.telefoneCliente}?text=${msgCliente}`, '_blank');
+    setTimeout(() => {
+      window.open(`https://wa.me/${pedido.telefoneEstabelecimento}?text=${msgEstab}`, '_blank');
+    }, 500);
   }
 }
